@@ -1,5 +1,5 @@
 {
-    "name": "davidyell/proffer",
+    "name": "ashanet/proffer",
     "description": "An upload plugin for CakePHP 4",
 	"type": "cakephp-plugin",
   	"keywords": ["cakephp", "cakephp4", "upload", "file", "image", "orm"],
