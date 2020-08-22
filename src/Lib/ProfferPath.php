@@ -27,6 +27,7 @@ class ProfferPath implements ProfferPathInterface
 
     protected $filename;
 
+    protected $id;
     protected $prefixes = [];
 
     /**
@@ -45,6 +46,10 @@ class ProfferPath implements ProfferPathInterface
             $this->setRoot(WWW_ROOT . 'files');
         }
 
+        if(isset($settings['uploadDirFromField'])){
+            $this->setUploadFromField(md5($entity[$settings['uploadDirFromField']]));
+        }
+        
         $this->setTable($table->getAlias());
         $this->setField($field);
         $this->setSeed($this->generateSeed($entity->get($settings['dir'])));
@@ -58,6 +63,27 @@ class ProfferPath implements ProfferPathInterface
         } else {
             $this->setFilename($entity->get($field));
         }
+    }
+
+    /**
+     * Get the UploadFromField
+     *
+     * @return string
+     */
+    public function getUploadFromField()
+    {
+        return $this->id;
+    }
+    /**
+     * Set the UploadFromField
+     *
+     * @param string $UploadFromField The absolute path to create spesfic of your upload folder, all
+     * files will be uploaded under this path.
+     * @return void
+     */
+    public function setUploadFromField($field)
+    {
+        $this->id = $field;
     }
 
     /**
@@ -199,7 +225,7 @@ class ProfferPath implements ProfferPathInterface
      * @param string $seed The current seed if there is one
      * @return string
      */
-    public function generateSeed($seed = null)
+    public function generateSeed($seed)
     {
         if ($seed) {
             return $seed;
@@ -233,11 +259,9 @@ class ProfferPath implements ProfferPathInterface
     {
         $table = $this->getTable();
         $table = !empty($table) ? $table . DS : null;
-
-        $seed = $this->getSeed();
-        $seed = !empty($seed) ? $seed . DS : null;
-
-        return $this->getRoot() . DS . $table . $this->getField() . DS . $seed;
+        $uploadDir = $this->getUploadFromField();
+         $seed = !empty($uploadDir) ? $uploadDir . DS : null;
+        return $this->getRoot() . DS . $table .DS . $this->getField() . DS .$seed;
     }
 
     /**
@@ -267,7 +291,6 @@ class ProfferPath implements ProfferPathInterface
         if ($fileList !== false) {
             array_map('unlink', $fileList);
         }
-
         if ($rmdir) {
             rmdir($folder);
         }
