@@ -59,6 +59,7 @@ class ProfferBehavior extends Behavior
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
+       
         foreach ($this->getConfig() as $field => $settings) {
             if (!isset($data[$field])) {
                 continue;
@@ -130,6 +131,7 @@ class ProfferBehavior extends Behavior
                 $upload->moveTo($path->fullPath());
 
                 $entity->set($field, $path->getFilename());
+               
                 $entity->set($settings['dir'], $path->getSeed());
 
                 $this->createThumbnails($entity, $settings, $path);
